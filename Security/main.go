@@ -23,7 +23,7 @@ func main() {
 	p := &peer{
 		id:            ownPort,
 		amountOfPings: make(map[int32]int32),
-		clients:       make(map[int32]SecOps.PingClient),
+		clients:       make(map[int32]SecOps.SecOpsClient),
 		ctx:           ctx,
 	}
 
@@ -34,7 +34,7 @@ func main() {
 	}
 
 	grpcServer := grpc.NewServer()
-	SecOps.RegisterPingServer(grpcServer, p)
+	SecOps.RegisterSecOpsServer(grpcServer, p)
 
 	go func() {
 		if err := grpcServer.Serve(list); err != nil {
@@ -56,7 +56,7 @@ func main() {
 			log.Fatalf("Could not connect: %s", err)
 		}
 		defer conn.Close()
-		c := SecOps.NewPingClient(conn)
+		c := SecOps.NewSecOpsClient(conn)
 		p.clients[port] = c
 	}
 
@@ -67,11 +67,16 @@ func main() {
 }
 
 type peer struct {
-	SecOps.UnimplementedPingServer
+	SecOps.UnimplementedSecOpsServer
 	id            int32
 	amountOfPings map[int32]int32
-	clients       map[int32]SecOps.PingClient
+	clients       map[int32]SecOps.SecOpsClient
 	ctx           context.Context
+}
+
+// mustEmbedUnimplementedSecOpsServer implements SecOps.SecOpsServer.
+func (*peer) mustEmbedUnimplementedSecOpsServer() {
+	panic("unimplemented")
 }
 
 func (p *peer) Ping(ctx context.Context, req *SecOps.Request) (*SecOps.Reply, error) {
