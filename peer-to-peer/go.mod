@@ -1,4 +1,4 @@
-module SpaceVikingEik/SecOps/peer-to-peer
+module github.com/SpaceVikingEik/SecOps/peer-to-peer
 
 go 1.17
 
