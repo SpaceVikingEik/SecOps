@@ -9,7 +9,7 @@ import (
 	"os"
 	"strconv"
 
-	ping "github.com/NaddiNadja/peer-to-peer/grpc"
+	SecOps "github.com/SpaceVikingEik/SecOps/tree/main/peer-to-peer/grpc"
 	"google.golang.org/grpc"
 )
 
@@ -23,7 +23,7 @@ func main() {
 	p := &peer{
 		id:            ownPort,
 		amountOfPings: make(map[int32]int32),
-		clients:       make(map[int32]ping.PingClient),
+		clients:       make(map[int32]SecOps.PingClient),
 		ctx:           ctx,
 	}
 
@@ -34,7 +34,7 @@ func main() {
 	}
 
 	grpcServer := grpc.NewServer()
-	ping.RegisterPingServer(grpcServer, p)
+	SecOps.RegisterPingServer(grpcServer, p)
 
 	go func() {
 		if err := grpcServer.Serve(list); err != nil {
@@ -56,7 +56,7 @@ func main() {
 			log.Fatalf("Could not connect: %s", err)
 		}
 		defer conn.Close()
-		c := ping.NewPingClient(conn)
+		c := SecOps.NewPingClient(conn)
 		p.clients[port] = c
 	}
 
@@ -67,23 +67,23 @@ func main() {
 }
 
 type peer struct {
-	ping.UnimplementedPingServer
+	SecOps.UnimplementedPingServer
 	id            int32
 	amountOfPings map[int32]int32
-	clients       map[int32]ping.PingClient
+	clients       map[int32]SecOps.PingClient
 	ctx           context.Context
 }
 
-func (p *peer) Ping(ctx context.Context, req *ping.Request) (*ping.Reply, error) {
+func (p *peer) Ping(ctx context.Context, req *SecOps.Request) (*SecOps.Reply, error) {
 	id := req.Id
 	p.amountOfPings[id] += 1
 
-	rep := &ping.Reply{Amount: p.amountOfPings[id]}
+	rep := &SecOps.Reply{Amount: p.amountOfPings[id]}
 	return rep, nil
 }
 
 func (p *peer) sendPingToAll() {
-	request := &ping.Request{Id: p.id}
+	request := &SecOps.Request{Id: p.id}
 	for id, client := range p.clients {
 		reply, err := client.Ping(p.ctx, request)
 		if err != nil {

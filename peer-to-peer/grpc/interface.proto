@@ -1,10 +1,10 @@
 syntax = "proto3";
 
-package ping;
-option go_package = "https://github.com/NaddiNadja/peer-to-peer;ping";
+package SecOps;
+option go_package = "https://github.com/SpaceVikingEik/SecOps/tree/main/peer-to-peer;SecOps";
 
 
-service Ping {
+service SecOps {
     rpc ping (Request) returns (Reply) {}
 }
 
