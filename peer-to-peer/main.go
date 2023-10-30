@@ -9,7 +9,7 @@ import (
 	"os"
 	"strconv"
 
-	SecOps "github.com/SpaceVikingEik/SecOps/tree/main/peer-to-peer/grpc"
+	SecOps "github.com/SpaceVikingEik/SecOps/peer-to-peer/grpc"
 	"google.golang.org/grpc"
 )
 
