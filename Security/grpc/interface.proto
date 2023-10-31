@@ -5,13 +5,13 @@ option go_package = "https://github.com/SpaceVikingEik/SecOps/Security;secops";
 
 
 service SecOps {
-    rpc ping (Request) returns (Reply) {}
+    rpc ping (Share) returns (Reply) {}
 }
 
-message Request {
-    int32 id = 1;
+message Share {
+    int64 share = 1;
 }
 
 message Reply {
-    int32 amount = 1;
+    bool success = 1;
 }
